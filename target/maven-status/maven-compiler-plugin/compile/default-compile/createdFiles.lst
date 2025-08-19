@@ -1,0 +1,14 @@
+com\votreentreprise\pos\common\types\CashMovementType.class
+com\votreentreprise\pos\common\types\ReceiptStatus.class
+com\votreentreprise\pos\common\audit\AuditableEntity.class
+com\votreentreprise\pos\common\types\Money.class
+com\votreentreprise\pos\common\types\TransactionType.class
+com\votreentreprise\pos\common\types\CashMovementReason.class
+com\votreentreprise\pos\common\types\ExpenseCategory.class
+com\votreentreprise\pos\common\types\PaymentMethod.class
+com\votreentreprise\pos\common\types\Quantity.class
+com\votreentreprise\pos\config\SecurityConfig.class
+com\votreentreprise\pos\common\types\CashSessionStatus.class
+com\votreentreprise\pos\store\domain\Store.class
+com\votreentreprise\pos\common\types\ReceiptStatusType.class
+com\votreentreprise\pos\PosApplication.class
