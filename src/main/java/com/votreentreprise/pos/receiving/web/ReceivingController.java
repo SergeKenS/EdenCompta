@@ -2,6 +2,8 @@ package com.votreentreprise.pos.receiving.web;
 
 import com.votreentreprise.pos.receiving.domain.GoodsReceipt;
 import com.votreentreprise.pos.receiving.domain.GoodsReceiptLine;
+import com.votreentreprise.pos.receiving.web.dto.GoodsReceiptDto;
+import com.votreentreprise.pos.receiving.web.dto.GoodsReceiptLineDto;
 import com.votreentreprise.pos.receiving.service.ReceivingService;
 import com.votreentreprise.pos.common.types.Money;
 import com.votreentreprise.pos.common.types.Quantity;
@@ -31,7 +33,7 @@ public class ReceivingController {
     }
 
     @PostMapping("/receipts")
-    public ResponseEntity<GoodsReceipt> createReceipt(
+    public ResponseEntity<GoodsReceiptDto> createReceipt(
             @RequestParam UUID storeId,
             @RequestParam String createdBy,
             @RequestParam(required = false) String sourceOfflineId) {
@@ -39,11 +41,11 @@ public class ReceivingController {
         log.debug("Création réception - store: {}, user: {}", storeId, createdBy);
 
         GoodsReceipt receipt = receivingService.createReceipt(storeId, createdBy, sourceOfflineId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(receipt);
+        return ResponseEntity.status(HttpStatus.CREATED).body(GoodsReceiptDto.fromEntity(receipt));
     }
 
     @PostMapping("/receipts/{receiptId}/lines")
-    public ResponseEntity<GoodsReceiptLine> addLine(
+    public ResponseEntity<GoodsReceiptLineDto> addLine(
             @PathVariable UUID receiptId,
             @RequestParam UUID variantId,
             @RequestParam BigDecimal quantityReceived,
@@ -63,18 +65,18 @@ public class ReceivingController {
                 notes
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(line);
+        return ResponseEntity.status(HttpStatus.CREATED).body(GoodsReceiptLineDto.fromEntity(line));
     }
 
     @PostMapping("/receipts/{receiptId}/finalize")
-    public ResponseEntity<GoodsReceipt> finalizeReceipt(
+    public ResponseEntity<GoodsReceiptDto> finalizeReceipt(
             @PathVariable UUID receiptId,
             @RequestParam String finalizedBy) {
 
         log.debug("Finalisation réception - ID: {}, user: {}", receiptId, finalizedBy);
 
         GoodsReceipt receipt = receivingService.finalizeReceipt(receiptId, finalizedBy);
-        return ResponseEntity.ok(receipt);
+        return ResponseEntity.ok(GoodsReceiptDto.fromEntity(receipt));
     }
 
     @PostMapping("/receipts/{receiptId}/cancel")
@@ -89,13 +91,13 @@ public class ReceivingController {
     }
 
     @GetMapping("/receipts/{receiptId}")
-    public ResponseEntity<GoodsReceipt> getReceipt(@PathVariable UUID receiptId) {
+    public ResponseEntity<GoodsReceiptDto> getReceipt(@PathVariable UUID receiptId) {
         GoodsReceipt receipt = receivingService.getReceiptById(receiptId);
-        return ResponseEntity.ok(receipt);
+        return ResponseEntity.ok(GoodsReceiptDto.fromEntity(receipt));
     }
 
     @GetMapping("/receipts")
-    public ResponseEntity<List<GoodsReceipt>> getReceipts(
+    public ResponseEntity<List<GoodsReceiptDto>> getReceipts(
             @RequestParam UUID storeId,
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
@@ -114,7 +116,11 @@ public class ReceivingController {
         List<GoodsReceipt> receipts = receivingService.getReceiptsByStoreAndDateRange(
                 storeId, from, to, status);
 
-        return ResponseEntity.ok(receipts);
+        List<GoodsReceiptDto> dtoList = receipts.stream()
+                .map(GoodsReceiptDto::fromEntity)
+                .toList();
+
+        return ResponseEntity.ok(dtoList);
     }
 
     @DeleteMapping("/receipts/{receiptId}/lines/{lineId}")
@@ -129,7 +135,7 @@ public class ReceivingController {
     }
 
     @PutMapping("/lines/{lineId}")
-    public ResponseEntity<GoodsReceiptLine> updateLine(
+    public ResponseEntity<GoodsReceiptLineDto> updateLine(
             @PathVariable UUID lineId,
             @RequestParam BigDecimal quantityReceived,
             @RequestParam BigDecimal unitCost,
@@ -145,6 +151,6 @@ public class ReceivingController {
                 notes
         );
 
-        return ResponseEntity.ok(line);
+        return ResponseEntity.ok(GoodsReceiptLineDto.fromEntity(line));
     }
 }

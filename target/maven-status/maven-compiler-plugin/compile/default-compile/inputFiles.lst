@@ -28,6 +28,7 @@ C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\r
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\inventory\domain\Product.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\inventory\repository\ProductVariantRepository.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\config\AppConfig.java
+C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\receiving\web\dto\GoodsReceiptLineDto.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\inventory\domain\InventoryTransaction.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\inventory\service\InventoryServiceImpl.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\common\types\ReceiptStatus.java
@@ -37,6 +38,7 @@ C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\r
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\common\types\CashSessionStatus.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\receiving\domain\GoodsReceiptLine.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\sales\domain\Payment.java
+C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\receiving\web\dto\GoodsReceiptDto.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\inventory\domain\ProductVariant.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\store\domain\Store.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\main\java\com\votreentreprise\pos\common\types\CashMovementReason.java

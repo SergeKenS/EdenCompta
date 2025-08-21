@@ -1,15 +1,7 @@
 package com.votreentreprise.pos.web;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.votreentreprise.pos.receiving.domain.GoodsReceipt;
 import com.votreentreprise.pos.receiving.domain.GoodsReceiptLine;
 import com.votreentreprise.pos.receiving.service.ReceivingService;
-import com.votreentreprise.pos.store.repository.StoreRepository;
-import com.votreentreprise.pos.store.domain.Store;
-import com.votreentreprise.pos.inventory.repository.ProductRepository;
-import com.votreentreprise.pos.inventory.repository.ProductVariantRepository;
-import com.votreentreprise.pos.inventory.domain.Product;
-import com.votreentreprise.pos.inventory.domain.ProductVariant;
 import com.votreentreprise.pos.common.types.Money;
 import com.votreentreprise.pos.common.types.Quantity;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @Transactional
 @ActiveProfiles("test")
 class ReceivingControllerTest {
@@ -39,34 +31,17 @@ class ReceivingControllerTest {
     @Autowired
     private ReceivingService receivingService;
 
-    @Autowired
-    private StoreRepository storeRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private ProductVariantRepository productVariantRepository;
+    // Repository non utilisé directement depuis que les IDs sont semés
+    // private StoreRepository storeRepository;
 
     private UUID testStoreId;
     private UUID testVariantId;
 
     @BeforeEach
     void setUp() {
-        // Créer un magasin de test
-        Store store = new Store();
-        store.setName("Magasin Test");
-        store.setAddress("123 Rue Test");
-        store.setPhone("514-123-4567");
-        store = storeRepository.save(store);
-        testStoreId = store.getId();
-
-        // Utiliser TestDataBuilder pour créer le produit et la variante
-        // (À adapter selon votre TestDataBuilder)
-        testVariantId = UUID.randomUUID(); // Temporaire
-
-        // TODO: Remplacer par la vraie création avec vos entités
-        // Une fois que vous montrez Product.java et ProductVariant.java
+        // Utiliser les données semées par sample-data.sql
+        testStoreId = com.votreentreprise.pos.utils.TestDataBuilder.TEST_STORE_ID;
+        testVariantId = com.votreentreprise.pos.utils.TestDataBuilder.TEST_VARIANT_A1_ID;
     }
 
     @Test

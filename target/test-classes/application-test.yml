@@ -13,13 +13,15 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
+    defer-datasource-initialization: true
 
   flyway:
     enabled: false
 
   sql:
     init:
-      mode: never  # ← CHANGEZ DE "embedded" À "never"
+      mode: always
+      data-locations: classpath:test-data/sample-data.sql
 
 logging:
   level:
