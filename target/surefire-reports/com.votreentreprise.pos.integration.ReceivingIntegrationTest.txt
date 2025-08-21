@@ -1,0 +1,50 @@
+-------------------------------------------------------------------------------
+Test set: com.votreentreprise.pos.integration.ReceivingIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 20.11 s <<< FAILURE! -- in com.votreentreprise.pos.integration.ReceivingIntegrationTest
+com.votreentreprise.pos.integration.ReceivingIntegrationTest.shouldHandleIdempotentCreation -- Time elapsed: 1.761 s <<< ERROR!
+com.votreentreprise.pos.common.exceptions.ResourceNotFoundException: Magasin non trouvé: 550e8400-e29b-41d4-a716-446655440000
+	at com.votreentreprise.pos.receiving.service.ReceivingServiceImpl.lambda$createReceipt$0(ReceivingServiceImpl.java:64)
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
+	at com.votreentreprise.pos.receiving.service.ReceivingServiceImpl.createReceipt(ReceivingServiceImpl.java:64)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:352)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:385)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:717)
+	at com.votreentreprise.pos.receiving.service.ReceivingServiceImpl$$SpringCGLIB$$0.createReceipt(<generated>)
+	at com.votreentreprise.pos.integration.ReceivingIntegrationTest.shouldHandleIdempotentCreation(ReceivingIntegrationTest.java:78)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.votreentreprise.pos.integration.ReceivingIntegrationTest.shouldCompleteFullReceivingWorkflow -- Time elapsed: 0.041 s <<< ERROR!
+com.votreentreprise.pos.common.exceptions.ResourceNotFoundException: Magasin non trouvé: 550e8400-e29b-41d4-a716-446655440000
+	at com.votreentreprise.pos.receiving.service.ReceivingServiceImpl.lambda$createReceipt$0(ReceivingServiceImpl.java:64)
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
+	at com.votreentreprise.pos.receiving.service.ReceivingServiceImpl.createReceipt(ReceivingServiceImpl.java:64)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:352)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:385)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:717)
+	at com.votreentreprise.pos.receiving.service.ReceivingServiceImpl$$SpringCGLIB$$0.createReceipt(<generated>)
+	at com.votreentreprise.pos.integration.ReceivingIntegrationTest.shouldCompleteFullReceivingWorkflow(ReceivingIntegrationTest.java:27)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

@@ -2,20 +2,19 @@ package com.votreentreprise.pos.common.types;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
 @Embeddable
-@NoArgsConstructor
-@Getter
 public class Money {
     @Column(precision = 10, scale = 2)
     private BigDecimal amount;
 
-    public Money(BigDecimal amount) {
+    public Money() {}
+
+    private Money(BigDecimal amount) {
         this.amount = amount.setScale(2, RoundingMode.HALF_EVEN);
     }
 
@@ -29,6 +28,10 @@ public class Money {
 
     public static Money zero() {
         return of(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
     }
 
     public Money add(Money other) {

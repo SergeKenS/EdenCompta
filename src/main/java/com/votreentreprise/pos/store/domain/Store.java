@@ -2,15 +2,9 @@ package com.votreentreprise.pos.store.domain;
 
 import com.votreentreprise.pos.common.audit.AuditableEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "stores")
-@Getter
-@Setter
-@NoArgsConstructor
 public class Store extends AuditableEntity {
 
     @Column(nullable = false)
@@ -20,7 +14,33 @@ public class Store extends AuditableEntity {
 
     private String phone;
 
+    public Store() {}
+
     public Store(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
