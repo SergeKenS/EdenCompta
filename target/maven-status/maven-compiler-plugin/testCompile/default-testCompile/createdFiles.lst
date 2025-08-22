@@ -1,8 +1,11 @@
 com\votreentreprise\pos\repository\StoreRepositoryTest.class
-com\votreentreprise\pos\integration\ReceivingIntegrationTest.class
-com\votreentreprise\pos\web\ReceivingControllerTest.class
+com\votreentreprise\pos\sales\service\SalesServiceSessionIntegrationTest.class
+com\votreentreprise\pos\sessions\service\SessionServiceIntegrationTest.class
 com\votreentreprise\pos\config\TestConfig.class
 com\votreentreprise\pos\PosApplicationTests.class
-com\votreentreprise\pos\repository\GoodsReceiptRepositoryTest.class
 com\votreentreprise\pos\service\ReceivingServiceTest.class
+com\votreentreprise\pos\integration\ReceivingIntegrationTest.class
+com\votreentreprise\pos\web\ReceivingControllerTest.class
+com\votreentreprise\pos\repository\GoodsReceiptRepositoryTest.class
+com\votreentreprise\pos\sessions\web\SessionControllerIntegrationTest.class
 com\votreentreprise\pos\utils\TestDataBuilder.class

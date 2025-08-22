@@ -4,5 +4,8 @@ C:\Users\kenfa\Documents\Projets\Comptab\src\test\java\com\votreentreprise\pos\c
 C:\Users\kenfa\Documents\Projets\Comptab\src\test\java\com\votreentreprise\pos\service\ReceivingServiceTest.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\test\java\com\votreentreprise\pos\integration\ReceivingIntegrationTest.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\test\java\com\votreentreprise\pos\PosApplicationTests.java
+C:\Users\kenfa\Documents\Projets\Comptab\src\test\java\com\votreentreprise\pos\sessions\service\SessionServiceIntegrationTest.java
+C:\Users\kenfa\Documents\Projets\Comptab\src\test\java\com\votreentreprise\pos\sessions\web\SessionControllerIntegrationTest.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\test\java\com\votreentreprise\pos\repository\StoreRepositoryTest.java
+C:\Users\kenfa\Documents\Projets\Comptab\src\test\java\com\votreentreprise\pos\sales\service\SalesServiceSessionIntegrationTest.java
 C:\Users\kenfa\Documents\Projets\Comptab\src\test\java\com\votreentreprise\pos\repository\GoodsReceiptRepositoryTest.java
