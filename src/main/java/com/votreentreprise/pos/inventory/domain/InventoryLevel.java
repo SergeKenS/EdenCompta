@@ -7,11 +7,16 @@ import com.votreentreprise.pos.store.domain.Store;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "inventory_levels",
         uniqueConstraints = @UniqueConstraint(columnNames = {"store_id", "variant_id"}))
 public class InventoryLevel extends AuditableEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
@@ -83,5 +88,13 @@ public class InventoryLevel extends AuditableEntity {
         this.quantityOnHand = newQuantity;
         this.averageCost = newAverageCost;
         this.lastUpdated = LocalDateTime.now();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }

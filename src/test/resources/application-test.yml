@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -8,11 +8,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
-        format_sql: true
+        format_sql: false
+        use_sql_comments: false
     defer-datasource-initialization: true
 
   flyway:
@@ -23,7 +24,30 @@ spring:
       mode: always
       data-locations: classpath:test-data/sample-data.sql
 
+  security:
+    user:
+      name: test
+      password: test
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+  main:
+    allow-bean-definition-overriding: true
+
 logging:
   level:
-    com.votreentreprise.pos: DEBUG
-    org.springframework.web: DEBUG
+    com.votreentreprise.pos: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+
+# Configuration spécifique pour les tests
+app:
+  jwt:
+    secret: testSecretKeyForTestingOnly12345678901234567890
+    expiration: 3600000

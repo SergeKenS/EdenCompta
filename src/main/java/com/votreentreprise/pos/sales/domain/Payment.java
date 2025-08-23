@@ -5,9 +5,15 @@ import com.votreentreprise.pos.common.types.Money;
 import com.votreentreprise.pos.common.types.PaymentMethod;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "payments")
 public class Payment extends AuditableEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id", nullable = false)
@@ -41,6 +47,9 @@ public class Payment extends AuditableEntity {
     public void setAmount(Money amount) { this.amount = amount; }
     public String getReference() { return reference; }
     public void setReference(String reference) { this.reference = reference; }
+
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 }
 
 

@@ -3,9 +3,15 @@ package com.votreentreprise.pos.store.domain;
 import com.votreentreprise.pos.common.audit.AuditableEntity;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "stores")
 public class Store extends AuditableEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false)
     private String name;
@@ -42,5 +48,13 @@ public class Store extends AuditableEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }

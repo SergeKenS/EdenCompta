@@ -17,9 +17,11 @@ public class DatabaseConfig {
 
     /**
      * Configuration spécifique pour les tests
+     * Seulement si Flyway est activé (ce qui n'est pas le cas en test)
      */
     @Bean
     @Profile("test")
+    @ConditionalOnProperty(name = "spring.flyway.enabled", havingValue = "true")
     public FlywayMigrationStrategy cleanMigrateStrategy() {
         return flyway -> {
             // Pour les tests, on peut nettoyer et recréer

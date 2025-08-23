@@ -36,7 +36,6 @@ public class InventoryServiceImpl implements InventoryService {
     @Transactional
     public void addStock(UUID storeId, UUID variantId, Quantity quantity,
                          Money unitCost, String referenceId, String referenceType) {
-        log.debug("Ajout stock - store: {}, variant: {}, qty: {}", storeId, variantId, quantity);
 
         Store store = getStore(storeId);
         ProductVariant variant = getVariant(variantId);
@@ -60,15 +59,13 @@ public class InventoryServiceImpl implements InventoryService {
                 unitCost, referenceId, referenceType);
         inventoryTransactionRepository.save(transaction);
 
-        log.debug("Stock ajouté - nouveau niveau: {}, coût moyen: {}",
-                newQuantity, newAverageCost);
+
     }
 
     @Override
     @Transactional
     public void removeStock(UUID storeId, UUID variantId, Quantity quantity,
                             String referenceId, String referenceType) {
-        log.debug("Retrait stock - store: {}, variant: {}, qty: {}", storeId, variantId, quantity);
 
         Store store = getStore(storeId);
         ProductVariant variant = getVariant(variantId);
@@ -93,15 +90,13 @@ public class InventoryServiceImpl implements InventoryService {
                 level.getAverageCost(), referenceId, referenceType);
         inventoryTransactionRepository.save(transaction);
 
-        log.debug("Stock retiré - nouveau niveau: {}", newQuantity);
+
     }
 
     @Override
     @Transactional
     public void adjustStock(UUID storeId, UUID variantId, Quantity newQuantity,
                             String reason, String adjustedBy) {
-        log.debug("Ajustement stock - store: {}, variant: {}, nouvelle qty: {}",
-                storeId, variantId, newQuantity);
 
         Store store = getStore(storeId);
         ProductVariant variant = getVariant(variantId);
@@ -126,7 +121,7 @@ public class InventoryServiceImpl implements InventoryService {
             inventoryTransactionRepository.save(transaction);
         }
 
-        log.debug("Ajustement terminé - niveau: {}", newQuantity);
+
     }
 
     @Override

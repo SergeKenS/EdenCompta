@@ -7,11 +7,16 @@ import com.votreentreprise.pos.inventory.domain.ProductVariant;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "goods_receipt_lines",
         uniqueConstraints = @UniqueConstraint(columnNames = {"receipt_id", "line_number"}))
 public class GoodsReceiptLine extends AuditableEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id", nullable = false)
@@ -59,6 +64,14 @@ public class GoodsReceiptLine extends AuditableEntity {
     }
 
     // Getters et Setters
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public GoodsReceipt getReceipt() {
         return receipt;
     }

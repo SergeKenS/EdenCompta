@@ -1,0 +1,18 @@
+# Created at 2025-08-22T23:33:37.027
+java.lang.ClassNotFoundException: com.votreentreprise.pos.PosApplicationTests
+
+# Created at 2025-08-22T23:33:39.568
+java.lang.ClassNotFoundException: com.votreentreprise.pos.reporting.service.ReportingServiceIntegrationTest
+
+# Created at 2025-08-22T23:33:43.643
+java.lang.ClassNotFoundException: com.votreentreprise.pos.repository.GoodsReceiptRepositoryTest
+
+# Created at 2025-08-22T23:33:46.311
+java.lang.ClassNotFoundException: com.votreentreprise.pos.repository.StoreRepositoryTest
+
+# Created at 2025-08-22T23:33:48.426
+java.lang.ClassNotFoundException: com.votreentreprise.pos.sales.service.SalesServiceSessionIntegrationTest
+
+# Created at 2025-08-22T23:33:51.014
+java.lang.ClassNotFoundException: com.votreentreprise.pos.service.ReceivingServiceTest
+

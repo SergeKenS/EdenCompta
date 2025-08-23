@@ -5,6 +5,7 @@ import com.votreentreprise.pos.common.types.MovementReason;
 import com.votreentreprise.pos.common.types.MovementType;
 import com.votreentreprise.pos.common.types.PaymentMethod;
 import com.votreentreprise.pos.common.types.Quantity;
+import com.votreentreprise.pos.inventory.service.InventoryService;
 import com.votreentreprise.pos.sessions.domain.CashSession;
 import com.votreentreprise.pos.sessions.domain.SessionMovement;
 import com.votreentreprise.pos.sessions.service.SessionService;
@@ -33,6 +34,9 @@ class SalesServiceSessionIntegrationTest {
     @Autowired
     private SessionService sessionService;
 
+    @Autowired
+    private InventoryService inventoryService;
+
     private UUID testStoreId;
     private UUID testVariantId;
     private String testUserId;
@@ -43,6 +47,16 @@ class SalesServiceSessionIntegrationTest {
         testStoreId = TestDataBuilder.TEST_STORE_ID;
         testVariantId = TestDataBuilder.TEST_VARIANT_A1_ID;
         testUserId = "test-user";
+        
+        // Create inventory stock for testing
+        inventoryService.addStock(
+                testStoreId,
+                testVariantId,
+                Quantity.of(new BigDecimal("100")),
+                Money.of(new BigDecimal("10.00")),
+                "test-user",
+                "Test stock setup"
+        );
         
         // Open a cash session for testing
         cashSession = sessionService.openCashSession(

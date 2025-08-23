@@ -201,8 +201,16 @@ public class SessionServiceImpl implements SessionService {
     @Override
     @Transactional(readOnly = true)
     public List<SessionMovement> getMovementsBySession(String sessionId, String sessionType) {
-        // TODO: Implement query to get movements by session
-        return List.of();
+        switch (sessionType.toUpperCase()) {
+            case "CASH":
+                return sessionMovementRepository.findByCashSession_Id(UUID.fromString(sessionId));
+            case "MOBILE":
+                return sessionMovementRepository.findByMobileSession_Id(UUID.fromString(sessionId));
+            case "OTHER":
+                return sessionMovementRepository.findByOtherSession_Id(UUID.fromString(sessionId));
+            default:
+                throw new BusinessException("Type de session invalide: " + sessionType);
+        }
     }
 
     @Override

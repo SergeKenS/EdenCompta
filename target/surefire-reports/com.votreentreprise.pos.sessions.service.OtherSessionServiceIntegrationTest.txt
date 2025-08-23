@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.votreentreprise.pos.sessions.service.OtherSessionServiceIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 24.85 s -- in com.votreentreprise.pos.sessions.service.OtherSessionServiceIntegrationTest

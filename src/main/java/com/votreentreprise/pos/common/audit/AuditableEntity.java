@@ -12,9 +12,7 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AuditableEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    // Note: @Id and @GeneratedValue should be in the concrete entity classes, not here
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -24,13 +22,8 @@ public abstract class AuditableEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    @Column(name = "created_by")
+    protected String createdBy; // Field accessible to subclasses
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -46,5 +39,13 @@ public abstract class AuditableEntity {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

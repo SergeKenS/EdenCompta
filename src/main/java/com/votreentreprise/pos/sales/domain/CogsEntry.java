@@ -7,9 +7,15 @@ import com.votreentreprise.pos.store.domain.Store;
 import com.votreentreprise.pos.inventory.domain.ProductVariant;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "cogs_entries")
 public class CogsEntry extends AuditableEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
@@ -59,6 +65,9 @@ public class CogsEntry extends AuditableEntity {
     public void setUnitCost(Money unitCost) { this.unitCost = unitCost; }
     public Money getTotalCogs() { return totalCogs; }
     public void setTotalCogs(Money totalCogs) { this.totalCogs = totalCogs; }
+
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 }
 
 

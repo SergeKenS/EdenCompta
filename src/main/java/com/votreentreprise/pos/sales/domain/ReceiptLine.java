@@ -6,9 +6,15 @@ import com.votreentreprise.pos.common.types.Quantity;
 import com.votreentreprise.pos.inventory.domain.ProductVariant;
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "receipt_lines")
 public class ReceiptLine extends AuditableEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id", nullable = false)
@@ -68,6 +74,9 @@ public class ReceiptLine extends AuditableEntity {
             this.lineTotal = unitPrice.multiply(quantity.getValue());
         }
     }
+
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 }
 
 

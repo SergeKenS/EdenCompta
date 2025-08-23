@@ -7,10 +7,15 @@ import com.votreentreprise.pos.common.types.MovementType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "session_movements")
 public class SessionMovement extends AuditableEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "session_id", nullable = false)
     private String sessionId; // UUID as string for flexibility
@@ -78,6 +83,9 @@ public class SessionMovement extends AuditableEntity {
     }
 
     // Getters and Setters
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
+
     public String getSessionId() { return sessionId; }
     public void setSessionId(String sessionId) { this.sessionId = sessionId; }
 

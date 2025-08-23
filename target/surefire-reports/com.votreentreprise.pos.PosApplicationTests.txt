@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.votreentreprise.pos.PosApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 35.38 s -- in com.votreentreprise.pos.PosApplicationTests
