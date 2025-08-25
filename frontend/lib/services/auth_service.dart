@@ -124,6 +124,42 @@ class AuthService {
       return false;
     }
   }
+
+  // Connexion par PIN pour les caissiers
+  Future<LoginResult> loginWithPin(String pin) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedPin = prefs.getString('cashier_pin');
+      
+      if (savedPin == pin) {
+        // Créer un utilisateur caissier temporaire
+        final user = User(
+          id: 'cashier_${DateTime.now().millisecondsSinceEpoch}',
+          username: 'caissier',
+          firstName: prefs.getString('cashier_first_name') ?? '',
+          lastName: prefs.getString('cashier_last_name') ?? '',
+          email: '',
+          role: UserRole.cashier,
+          status: UserStatus.active,
+          storeId: prefs.getString('store_id') ?? 'default_store',
+          createdAt: DateTime.now(),
+          loginAttempts: 0,
+        );
+        
+        // Générer un token temporaire
+        final token = 'cashier_token_${DateTime.now().millisecondsSinceEpoch}';
+        
+        // Sauvegarder les données d'authentification
+        await _saveAuthData(token, user);
+        
+        return LoginResult.success(user, token);
+      } else {
+        return LoginResult.failure('Code PIN incorrect');
+      }
+    } catch (e) {
+      return LoginResult.failure('Erreur lors de la connexion: ${e.toString()}');
+    }
+  }
 }
 
 // Résultat de la connexion
@@ -227,5 +263,26 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> logout() async {
     await _authService.logout();
     state = const AuthState();
+  }
+
+  Future<void> loginWithPin(String pin) async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    final result = await _authService.loginWithPin(pin);
+
+    if (result.success) {
+      state = state.copyWith(
+        isLoading: false,
+        isAuthenticated: true,
+        user: result.user,
+        error: null,
+      );
+    } else {
+      state = state.copyWith(
+        isLoading: false,
+        isAuthenticated: false,
+        error: result.errorMessage,
+      );
+    }
   }
 }

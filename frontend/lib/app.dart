@@ -1,6 +1,8 @@
 
 // Export des écrans pour le main.dart
 export 'screens/login_screen.dart';
+export 'screens/setup_screen.dart';
+export 'screens/pin_login_screen.dart';
 export 'screens/dashboard_screen.dart';
 export 'screens/sales_screen.dart';
 export 'screens/inventory_screen.dart';

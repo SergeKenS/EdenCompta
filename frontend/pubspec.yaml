@@ -41,11 +41,11 @@ dependencies:
   
   # Permissions et fonctionnalités
   permission_handler: ^11.0.1
-  qr_code_scanner: ^1.0.1
+  mobile_scanner: ^5.0.0  # Package plus récent et maintenu
   barcode_widget: ^2.0.4
-  
+
   # Notifications
-  flutter_local_notifications: ^16.3.0
+  flutter_local_notifications: ^17.2.0
   
   # Tests
   flutter_test:

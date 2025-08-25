@@ -5,6 +5,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:comptab_pos/app.dart';
 import 'package:comptab_pos/services/auth_service.dart';
+import 'package:comptab_pos/services/setup_service.dart';
+import 'package:comptab_pos/screens/setup_screen.dart';
+import 'package:comptab_pos/screens/pin_login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +31,7 @@ class ComptabPosApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
+    final setupState = ref.watch(setupStateProvider);
     
     return MaterialApp.router(
       title: 'COMPTAB POS',
@@ -82,28 +86,27 @@ class ComptabPosApp extends ConsumerWidget {
         // fontFamily: 'Roboto', // Commenté jusqu'à ce que les polices soient disponibles
       ),
       themeMode: ThemeMode.system,
-      routerConfig: _createRouter(authState),
+      routerConfig: _createRouter(authState, setupState),
     );
   }
 
-  GoRouter _createRouter(AuthState authState) {
+  GoRouter _createRouter(AuthState authState, SetupState setupState) {
     return GoRouter(
-      initialLocation: authState.isAuthenticated ? '/dashboard' : '/login',
+      initialLocation: _getInitialLocation(authState, setupState),
       redirect: (context, state) {
-        final isAuthenticated = authState.isAuthenticated;
-        final isLoginRoute = state.matchedLocation == '/login';
-        
-        if (!isAuthenticated && !isLoginRoute) {
-          return '/login';
-        }
-        
-        if (isAuthenticated && isLoginRoute) {
-          return '/dashboard';
-        }
-        
-        return null;
+        return _handleRedirect(context, state, authState, setupState);
       },
       routes: [
+        GoRoute(
+          path: '/setup',
+          name: 'setup',
+          builder: (context, state) => const SetupScreen(),
+        ),
+        GoRoute(
+          path: '/pin-login',
+          name: 'pin-login',
+          builder: (context, state) => const PinLoginScreen(),
+        ),
         GoRoute(
           path: '/login',
           name: 'login',
@@ -141,5 +144,43 @@ class ComptabPosApp extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  String _getInitialLocation(AuthState authState, SetupState setupState) {
+    // Si c'est la première fois, aller à l'assistant de configuration
+    if (setupState.isFirstTime) {
+      return '/setup';
+    }
+    
+    // Si l'utilisateur est authentifié, aller au dashboard
+    if (authState.isAuthenticated) {
+      return '/dashboard';
+    }
+    
+    // Sinon, aller à la connexion par PIN
+    return '/pin-login';
+  }
+
+  String? _handleRedirect(BuildContext context, GoRouterState state, AuthState authState, SetupState setupState) {
+    final currentLocation = state.matchedLocation;
+    
+    // Si c'est la première fois et qu'on n'est pas sur /setup
+    if (setupState.isFirstTime && currentLocation != '/setup') {
+      return '/setup';
+    }
+    
+    // Si la configuration est terminée mais pas connecté
+    if (!setupState.isFirstTime && !authState.isAuthenticated) {
+      if (currentLocation != '/pin-login') {
+        return '/pin-login';
+      }
+    }
+    
+    // Si connecté et sur une page de connexion
+    if (authState.isAuthenticated && (currentLocation == '/pin-login' || currentLocation == '/setup')) {
+      return '/dashboard';
+    }
+    
+    return null;
   }
 }
