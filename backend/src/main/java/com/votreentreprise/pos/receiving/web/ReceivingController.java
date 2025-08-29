@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -32,6 +33,7 @@ public class ReceivingController {
         this.receivingService = receivingService;
     }
 
+    @PreAuthorize("hasAuthority('INVENTORY.RECEIVE')")
     @PostMapping("/receipts")
     public ResponseEntity<GoodsReceiptDto> createReceipt(
             @RequestParam UUID storeId,
@@ -44,6 +46,7 @@ public class ReceivingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(GoodsReceiptDto.fromEntity(receipt));
     }
 
+    @PreAuthorize("hasAuthority('INVENTORY.RECEIVE')")
     @PostMapping("/receipts/{receiptId}/lines")
     public ResponseEntity<GoodsReceiptLineDto> addLine(
             @PathVariable UUID receiptId,

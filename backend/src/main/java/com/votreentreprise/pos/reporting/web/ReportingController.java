@@ -5,6 +5,7 @@ import com.votreentreprise.pos.reporting.web.dto.DailySummaryDto;
 import com.votreentreprise.pos.reporting.web.dto.ZReportDto;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class ReportingController {
     /**
      * Génère un Z-Report pour une date spécifique
      */
+    @PreAuthorize("hasAuthority('REPORTS.VIEW')")
     @GetMapping("/z-report")
     public ResponseEntity<ZReportDto> generateZReport(
             @RequestParam UUID storeId,

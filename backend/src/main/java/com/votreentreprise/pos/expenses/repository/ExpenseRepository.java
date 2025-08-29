@@ -66,4 +66,24 @@ public interface ExpenseRepository extends JpaRepository<Expense, UUID> {
     List<Object[]> sumAmountByCategoryForStoreAndDateRange(@Param("storeId") UUID storeId, 
                                                            @Param("startDate") LocalDateTime startDate, 
                                                            @Param("endDate") LocalDateTime endDate);
+
+    // Sum total amount by status for a store and date range
+    @Query("SELECT COALESCE(SUM(e.amount.amount), 0) FROM Expense e " +
+           "WHERE e.store.id = :storeId " +
+           "AND (:startDate IS NULL OR e.expenseDate >= :startDate) " +
+           "AND (:endDate IS NULL OR e.expenseDate <= :endDate) " +
+           "AND e.status = :status")
+    Double sumAmountByStoreAndStatusAndDateRange(@Param("storeId") UUID storeId, 
+                                                @Param("status") ExpenseStatus status,
+                                                @Param("startDate") LocalDateTime startDate, 
+                                                @Param("endDate") LocalDateTime endDate);
+
+    // Sum all expenses for a store and date range
+    @Query("SELECT COALESCE(SUM(e.amount.amount), 0) FROM Expense e " +
+           "WHERE e.store.id = :storeId " +
+           "AND (:startDate IS NULL OR e.expenseDate >= :startDate) " +
+           "AND (:endDate IS NULL OR e.expenseDate <= :endDate)")
+    Double sumTotalAmountByStoreAndDateRange(@Param("storeId") UUID storeId,
+                                           @Param("startDate") LocalDateTime startDate, 
+                                           @Param("endDate") LocalDateTime endDate);
 }

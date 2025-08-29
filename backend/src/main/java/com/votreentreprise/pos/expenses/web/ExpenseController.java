@@ -1,5 +1,6 @@
 package com.votreentreprise.pos.expenses.web;
 
+import com.votreentreprise.pos.expenses.repository.ExpenseRepository;
 import com.votreentreprise.pos.expenses.service.ExpenseService;
 import com.votreentreprise.pos.expenses.web.dto.ExpenseDto;
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -19,9 +21,11 @@ import java.util.stream.Collectors;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final ExpenseRepository expenseRepository;
 
-    public ExpenseController(ExpenseService expenseService) {
+    public ExpenseController(ExpenseService expenseService, ExpenseRepository expenseRepository) {
         this.expenseService = expenseService;
+        this.expenseRepository = expenseRepository;
     }
 
     // CRUD operations
@@ -170,6 +174,38 @@ public class ExpenseController {
         return ResponseEntity.ok(totals);
     }
 
+    /**
+     * Endpoint pour récupérer le résumé des dépenses
+     * GET /api/expenses/summary?storeId&from&to
+     */
+    @PreAuthorize("hasAuthority('REPORTS.VIEW')")
+    @GetMapping("/summary")
+    public ResponseEntity<ExpenseSummaryDto> getExpensesSummary(
+            @RequestParam UUID storeId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
+        
+        // Récupérer les totaux par statut
+        Double totalExpenses = expenseRepository.sumTotalAmountByStoreAndDateRange(storeId, from, to);
+        Double paidExpenses = expenseRepository.sumAmountByStoreAndStatusAndDateRange(
+            storeId, com.votreentreprise.pos.expenses.domain.ExpenseStatus.APPROVED, from, to);
+        Double pendingExpenses = expenseRepository.sumAmountByStoreAndStatusAndDateRange(
+            storeId, com.votreentreprise.pos.expenses.domain.ExpenseStatus.PENDING, from, to);
+        
+        // Convertir null en 0.0 si nécessaire
+        totalExpenses = totalExpenses != null ? totalExpenses : 0.0;
+        paidExpenses = paidExpenses != null ? paidExpenses : 0.0;
+        pendingExpenses = pendingExpenses != null ? pendingExpenses : 0.0;
+        
+        ExpenseSummaryDto summary = new ExpenseSummaryDto(
+            java.math.BigDecimal.valueOf(totalExpenses),
+            java.math.BigDecimal.valueOf(paidExpenses),
+            java.math.BigDecimal.valueOf(pendingExpenses)
+        );
+        
+        return ResponseEntity.ok(summary);
+    }
+
     // Request DTOs
     public record CreateExpenseRequest(
             UUID storeId,
@@ -194,4 +230,13 @@ public class ExpenseController {
     public record ApproveExpenseRequest(String approvedBy) {}
 
     public record RejectExpenseRequest(String reason) {}
+
+    /**
+     * DTO pour le résumé des dépenses
+     */
+    public record ExpenseSummaryDto(
+            java.math.BigDecimal totalExpenses,
+            java.math.BigDecimal paidExpenses,
+            java.math.BigDecimal pendingExpenses
+    ) {}
 }

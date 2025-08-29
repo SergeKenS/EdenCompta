@@ -204,6 +204,31 @@ public class CashflowController {
             String description
     ) {}
 
+    // Manual entry (cash-in without sale)
+    @PostMapping("/manual-entry")
+    public ResponseEntity<CashMovementDto> manualEntry(@RequestBody ManualEntryRequest request) {
+        var movement = cashflowService.recordCashIn(
+                request.storeId(),
+                CashMovementReason.DEPOSIT,
+                Money.of(request.amount()),
+                null,
+                "MANUAL",
+                request.reason(),
+                request.createdBy(),
+                request.sourceOfflineId()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(CashMovementDto.fromEntity(movement));
+    }
+
+    public record ManualEntryRequest(
+            UUID storeId,
+            String method,
+            BigDecimal amount,
+            String reason,
+            String createdBy,
+            String sourceOfflineId
+    ) {}
+
     public record RecordCashInRequest(
             CashMovementReason reason,
             BigDecimal amount,

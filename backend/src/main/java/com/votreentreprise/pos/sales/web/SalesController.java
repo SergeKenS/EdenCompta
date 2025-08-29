@@ -10,6 +10,7 @@ import com.votreentreprise.pos.sales.service.SalesService;
 import com.votreentreprise.pos.sales.web.dto.ReceiptDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ public class SalesController {
         this.salesService = salesService;
     }
 
+    @PreAuthorize("hasAuthority('SALE.MAKE')")
     @PostMapping("/receipts")
     public ResponseEntity<ReceiptDto> createReceipt(
             @RequestParam UUID storeId,

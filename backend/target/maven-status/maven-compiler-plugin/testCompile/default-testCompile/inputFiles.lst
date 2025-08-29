@@ -1,9 +1,12 @@
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\sessions\service\OtherSessionServiceIntegrationTest.java
+C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\web\TestSecurityConfig.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\config\IntegrationTest.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\config\TestConfig.java
+C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\rbac\integration\RbacIntegrationTest.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\SimpleContextTest.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\sessions\service\MobileSessionServiceIntegrationTest.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\users\service\UserServiceIntegrationTest.java
+C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\rbac\service\RbacServiceTest.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\sessions\service\SessionServiceIntegrationTest.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\web\ReceivingControllerTest.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\test\java\com\votreentreprise\pos\expenses\service\ExpenseServiceIntegrationTest.java

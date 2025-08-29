@@ -1,5 +1,6 @@
 package com.votreentreprise.pos.users.web;
 
+import com.votreentreprise.pos.rbac.service.AuthorizationService;
 import com.votreentreprise.pos.users.domain.User;
 import com.votreentreprise.pos.users.domain.UserRole;
 import com.votreentreprise.pos.users.domain.UserStatus;
@@ -9,9 +10,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -20,9 +23,11 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    private final AuthorizationService authorizationService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthorizationService authorizationService) {
         this.userService = userService;
+        this.authorizationService = authorizationService;
     }
 
     // CRUD operations
@@ -265,6 +270,16 @@ public class UserController {
     public ResponseEntity<ApiResponse> removeUserFromStore(@PathVariable UUID userId) {
         userService.removeUserFromStore(userId);
         return ResponseEntity.ok(new ApiResponse(true, "Utilisateur retiré du magasin avec succès"));
+    }
+
+    // RBAC endpoints
+    @GetMapping("/me/permissions")
+    public ResponseEntity<Set<String>> getMyPermissions(Authentication authentication) {
+        // Extraire l'ID utilisateur depuis l'authentification
+        String username = authentication.getName();
+        User user = userService.getUserByUsername(username);
+        Set<String> permissions = authorizationService.getPermissionsForUser(user.getId());
+        return ResponseEntity.ok(permissions);
     }
 
     // Request/Response DTOs
