@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../providers/cart_provider.dart';
 
 class CartPage extends ConsumerStatefulWidget {
   const CartPage({super.key});
@@ -18,22 +19,6 @@ class _CartPageState extends ConsumerState<CartPage> {
   
   String _selectedPaymentMethod = 'Espèces';
   
-  // Données simulées du panier
-  final List<Map<String, dynamic>> _cartItems = [
-    {
-      'id': '1',
-      'name': 'Astronote',
-      'price': 25.0,
-      'quantity': 2,
-    },
-    {
-      'id': '2',
-      'name': 'Montre TK25',
-      'price': 40.0,
-      'quantity': 1,
-    },
-  ];
-
   @override
   void dispose() {
     _phoneController.dispose();
@@ -43,7 +28,8 @@ class _CartPageState extends ConsumerState<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    final total = _calculateTotal();
+    final cart = ref.watch(cartProvider);
+    final total = cart.fold<double>(0.0, (sum, i) => sum + i.price * i.quantity);
     
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
@@ -53,9 +39,13 @@ class _CartPageState extends ConsumerState<CartPage> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
+            icon: const Icon(Icons.delete_sweep),
+            tooltip: 'Vider le panier',
+            onPressed: _confirmClearCart,
+          ),
+          IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              // TODO: Retourner à la page de vente pour modifier
               context.pop();
             },
           ),
@@ -85,7 +75,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                           ),
                           const SizedBox(height: 16),
                           
-                          ..._cartItems.map((item) => _buildCartItem(item)),
+                          ...cart.map((item) => _buildCartItem(item)),
                           
                           const Divider(),
                           
@@ -142,17 +132,13 @@ class _CartPageState extends ConsumerState<CartPage> {
                             children: [
                               Expanded(
                                 child: TextButton(
-                                  onPressed: () {
-                                    // TODO: Ajouter une taxe
-                                  },
+                                  onPressed: () {},
                                   child: const Text('AJOUTER UNE TAXE'),
                                 ),
                               ),
                               Expanded(
                                 child: TextButton(
-                                  onPressed: () {
-                                    // TODO: Ajouter une remise
-                                  },
+                                  onPressed: () {},
                                   child: const Text('AJOUTER UNE REMISE'),
                                 ),
                               ),
@@ -160,9 +146,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                           ),
                           const SizedBox(height: 8),
                           TextButton(
-                            onPressed: () {
-                              // TODO: Ajouter d'autres frais
-                            },
+                            onPressed: () {},
                             child: const Text('AJOUTER D\'AUTRES FRAIS'),
                           ),
                         ],
@@ -203,9 +187,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                               ),
                               IconButton(
                                 icon: const Icon(Icons.search, color: AppTheme.accentColor),
-                                onPressed: () {
-                                  // TODO: Rechercher le client
-                                },
+                                onPressed: () {},
                               ),
                             ],
                           ),
@@ -249,9 +231,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                             childAspectRatio: 2,
                             children: [
                               _buildPaymentMethod('Espèces', Icons.money, Colors.green),
-                              _buildPaymentMethod('Carte de débit', Icons.credit_card, Colors.orange),
-                              _buildPaymentMethod('Carte de crédit', Icons.credit_card, Colors.orange),
-                              _buildPaymentMethod('Crédit', Icons.account_balance_wallet, Colors.teal),
+                              _buildPaymentMethod('Mobile Money', Icons.phone_iphone, Colors.teal),
                             ],
                           ),
                         ],
@@ -281,7 +261,7 @@ class _CartPageState extends ConsumerState<CartPage> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _processPayment,
+                  onPressed: () => _confirmCheckout(total),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.successColor,
                     foregroundColor: Colors.white,
@@ -301,7 +281,7 @@ class _CartPageState extends ConsumerState<CartPage> {
     );
   }
 
-  Widget _buildCartItem(Map<String, dynamic> item) {
+  Widget _buildCartItem(CartItem item) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -311,11 +291,11 @@ class _CartPageState extends ConsumerState<CartPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item['name'],
+                  item.name,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Text(
-                  '${item['quantity']} x ${item['price']}',
+                  '${item.quantity} x ${item.price}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppTheme.successColor,
                     fontWeight: FontWeight.w600,
@@ -325,7 +305,7 @@ class _CartPageState extends ConsumerState<CartPage> {
             ),
           ),
           Text(
-            '${(item['price'] * item['quantity']).toStringAsFixed(0)}',
+            '${(item.price * item.quantity).toStringAsFixed(0)}',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -333,8 +313,125 @@ class _CartPageState extends ConsumerState<CartPage> {
           IconButton(
             icon: const Icon(Icons.edit, color: AppTheme.accentColor),
             onPressed: () {
-              // TODO: Éditer l'article
+              _editItemPrice(item);
             },
+          ),
+          IconButton(
+            icon: const Icon(Icons.close, color: Colors.redAccent),
+            tooltip: 'Supprimer',
+            onPressed: () => _confirmRemoveItem(item),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _editItemPrice(CartItem item) {
+    final priceController = TextEditingController(text: item.price.toStringAsFixed(2));
+    final qtyController = TextEditingController(text: item.quantity.toString());
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Modifier - ${item.name}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: qtyController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Quantité',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: priceController,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
+                  labelText: 'Prix unitaire',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Annuler'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final qty = int.tryParse(qtyController.text.trim());
+                final price = double.tryParse(priceController.text.trim());
+                if (qty == null || qty <= 0 || price == null || price < 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Valeurs invalides')),
+                  );
+                  return;
+                }
+                ref.read(cartProvider.notifier).updateItem(
+                  item.id,
+                  price: price,
+                  quantity: qty,
+                );
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.accentColor),
+              child: const Text('Enregistrer'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _confirmRemoveItem(CartItem item) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Supprimer l\'article'),
+        content: Text('Voulez-vous supprimer \"${item.name}\" du panier ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref.read(cartProvider.notifier).removeAll(item.id);
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+            child: const Text('Supprimer'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmClearCart() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Vider le panier'),
+        content: const Text('Voulez-vous vraiment vider tout le panier ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref.read(cartProvider.notifier).clear();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Panier vidé')),
+              );
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+            child: const Text('Vider'),
           ),
         ],
       ),
@@ -404,16 +501,7 @@ class _CartPageState extends ConsumerState<CartPage> {
     );
   }
 
-  double _calculateTotal() {
-    double total = 0.0;
-    for (var item in _cartItems) {
-      total += (item['price'] as double) * (item['quantity'] as int);
-    }
-    return total;
-  }
-
-  void _processPayment() {
-    // TODO: Implémenter le traitement du paiement
+  void _processPayment(double total) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -428,7 +516,7 @@ class _CartPageState extends ConsumerState<CartPage> {
             ),
             const SizedBox(height: 16),
             Text(
-              '\$${_calculateTotal().toStringAsFixed(2)}',
+              '\$${total.toStringAsFixed(2)}',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: AppTheme.accentColor,
                 fontWeight: FontWeight.bold,
@@ -436,11 +524,7 @@ class _CartPageState extends ConsumerState<CartPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              'ID DE RÉCEPTION : BD-28',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            Text(
-              'NOMBRE D\'ARTICLES : ${_cartItems.length}',
+              'NOMBRE D\'ARTICLES : ${ref.read(cartProvider).length}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
@@ -451,7 +535,6 @@ class _CartPageState extends ConsumerState<CartPage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: Obtenir un reçu
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
@@ -469,7 +552,8 @@ class _CartPageState extends ConsumerState<CartPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    // TODO: Nouvelle vente
+                    ref.read(cartProvider.notifier).clear();
+                    context.go('/sales');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.accentColor,
@@ -478,6 +562,29 @@ class _CartPageState extends ConsumerState<CartPage> {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmCheckout(double total) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmer l\'achat ?'),
+        content: Text('Total: \$${total.toStringAsFixed(2)}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _processPayment(total);
+            },
+            child: const Text('Oui'),
           ),
         ],
       ),

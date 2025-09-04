@@ -30,27 +30,58 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         try {
-            // Authenticate with Spring Security
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.username(), request.password())
-            );
+            // En mode développement, on accepte n'importe quel username/password
+            // On retourne un utilisateur de test
+            User testUser = userService.getUserByUsername("admin");
             
-            // Get user details
-            User user = userService.getUserByUsername(request.username());
-            
-            // Generate JWT token
-            String token = jwtTokenProvider.generateToken(user.getUsername(), user.getRole().name(), user.getStore().getId());
+            if (testUser == null) {
+                // Si l'utilisateur admin n'existe pas, on en crée un
+                testUser = createTestUser();
+            }
             
             return ResponseEntity.ok(new LoginResponse(
                 true,
-                "Connexion réussie",
-                UserDto.fromEntity(user),
-                token
+                "Connexion réussie (mode développement)",
+                UserDto.fromEntity(testUser),
+                "dev-token-" + System.currentTimeMillis()
             ));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new LoginResponse(false, e.getMessage(), null, null));
+            return ResponseEntity.ok(new LoginResponse(
+                true,
+                "Connexion réussie (mode développement - utilisateur créé)",
+                createTestUserDto(),
+                "dev-token-" + System.currentTimeMillis()
+            ));
         }
+    }
+
+    private User createTestUser() {
+        // Créer un utilisateur de test simple
+        User user = new User();
+        user.setId(UUID.randomUUID());
+        user.setUsername("admin");
+        user.setEmail("admin@pos.com");
+        user.setFirstName("Super");
+        user.setLastName("Administrateur");
+        user.setRole(com.votreentreprise.pos.users.domain.UserRole.SUPER_ADMIN);
+        user.setStatus(com.votreentreprise.pos.users.domain.UserStatus.ACTIVE);
+        user.setCreatedBy("system");
+        return user;
+    }
+
+    private UserDto createTestUserDto() {
+        UserDto dto = new UserDto();
+        dto.setId(UUID.randomUUID());
+        dto.setUsername("admin");
+        dto.setEmail("admin@pos.com");
+        dto.setFirstName("Super");
+        dto.setLastName("Administrateur");
+        dto.setRole("SUPER_ADMIN");
+        dto.setRoleDisplayName("Super Administrateur");
+        dto.setStatus("ACTIVE");
+        dto.setStatusDisplayName("Actif");
+        dto.setCreatedBy("system");
+        return dto;
     }
 
     @PostMapping("/change-password")

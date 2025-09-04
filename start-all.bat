@@ -41,3 +41,4 @@ echo - Manager : manager1@pos.com / admin123
 echo - Caissier : cashier1@pos.com / admin123
 echo.
 pause
+

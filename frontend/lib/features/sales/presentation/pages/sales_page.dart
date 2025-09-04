@@ -7,6 +7,9 @@ import '../../../../core/constants/app_constants.dart';
 import '../widgets/product_grid.dart';
 import '../widgets/category_filter.dart';
 import '../widgets/cart_summary.dart';
+import '../providers/cart_provider.dart';
+import '../../../inventory/presentation/providers/inventory_provider.dart';
+import '../../../inventory/data/models/product_model.dart';
 
 class SalesPage extends ConsumerStatefulWidget {
   const SalesPage({super.key});
@@ -18,42 +21,7 @@ class SalesPage extends ConsumerStatefulWidget {
 class _SalesPageState extends ConsumerState<SalesPage> {
   final TextEditingController _searchController = TextEditingController();
   String _selectedCategory = 'Tous';
-  final List<String> _categories = ['Tous', 'Laptop', 'Gadget'];
-
-  // Données simulées des produits (sera remplacé par des données du backend)
-  final List<Map<String, dynamic>> _products = [
-    {
-      'id': '1',
-      'name': 'Dell E3350',
-      'category': 'Laptop',
-      'price': 12500.00,
-      'image': null,
-    },
-    {
-      'id': '2',
-      'name': 'Astronote',
-      'category': 'Gadget',
-      'price': 25.00,
-      'image': null,
-    },
-    {
-      'id': '3',
-      'name': 'Manette',
-      'category': 'Gadget',
-      'price': 29.00,
-      'image': null,
-    },
-    {
-      'id': '4',
-      'name': 'Montre TK25',
-      'category': 'Gadget',
-      'price': 40.00,
-      'image': null,
-    },
-  ];
-
-  // Panier (sera géré par Riverpod plus tard)
-  final List<Map<String, dynamic>> _cartItems = [];
+  final List<String> _categories = ['Tous'];
 
   @override
   void dispose() {
@@ -63,7 +31,39 @@ class _SalesPageState extends ConsumerState<SalesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredProducts = _getFilteredProducts();
+    final productsState = ref.watch(productsNotifierProvider);
+    final categoriesFuture = ref.watch(categoriesProvider);
+    final cart = ref.watch(cartProvider);
+
+    categoriesFuture.whenData((cats) {
+      // Maintenir 'Tous' en tête
+      final merged = ['Tous', ...cats.where((c) => c != 'Tous')];
+      if (merged.toString() != _categories.toString()) {
+        // éviter setState cyclique si identique
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            _categories.clear();
+            _categories.addAll(merged);
+          });
+        });
+      }
+    });
+
+    final filteredProducts = productsState.when<List<ProductModel>>(
+      data: (products) {
+        var list = products;
+        if (_selectedCategory != 'Tous') {
+          list = list.where((p) => p.category == _selectedCategory).toList();
+        }
+        if (_searchController.text.isNotEmpty) {
+          final term = _searchController.text.toLowerCase();
+          list = list.where((p) => p.name.toLowerCase().contains(term)).toList();
+        }
+        return list;
+      },
+      loading: () => const [],
+      error: (_, __) => const [],
+    );
     
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
@@ -73,7 +73,7 @@ class _SalesPageState extends ConsumerState<SalesPage> {
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
-          if (_cartItems.isNotEmpty)
+          if (cart.isNotEmpty)
             Stack(
               children: [
                 IconButton(
@@ -94,7 +94,7 @@ class _SalesPageState extends ConsumerState<SalesPage> {
                       minHeight: 16,
                     ),
                     child: Text(
-                      '${_cartItems.length}',
+                      '${cart.fold<int>(0, (sum, i) => sum + i.quantity)}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -145,7 +145,6 @@ class _SalesPageState extends ConsumerState<SalesPage> {
                   child: IconButton(
                     icon: const Icon(Icons.qr_code_scanner, color: Colors.white),
                     onPressed: () {
-                      // TODO: Implement barcode scanner
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Scanner à venir')),
                       );
@@ -169,22 +168,39 @@ class _SalesPageState extends ConsumerState<SalesPage> {
 
           // Liste des produits
           Expanded(
-            child: ProductGrid(
-              products: filteredProducts,
-              onProductTap: _addToCart,
+            child: productsState.when(
+              data: (_) => ProductGrid(
+                products: filteredProducts,
+                onAdd: (id, name, price) {
+                  ref.read(cartProvider.notifier).addItem(
+                    id: id,
+                    name: name,
+                    price: price,
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('$name ajouté au panier'),
+                      duration: const Duration(seconds: 1),
+                      backgroundColor: AppTheme.successColor,
+                    ),
+                  );
+                },
+              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, st) => Center(child: Text('Erreur: $e')),
             ),
           ),
 
           // Résumé du panier
-          if (_cartItems.isNotEmpty)
+          if (cart.isNotEmpty)
             CartSummary(
-              itemCount: _cartItems.length,
-              total: _calculateTotal(),
+              itemCount: cart.fold<int>(0, (sum, i) => sum + i.quantity),
+              total: cart.fold<double>(0.0, (sum, i) => sum + i.price * i.quantity),
               onViewCart: () => context.push('/sales/cart'),
             ),
         ],
       ),
-      floatingActionButton: _cartItems.isNotEmpty
+      floatingActionButton: cart.isNotEmpty
           ? FloatingActionButton.extended(
               onPressed: () => context.push('/sales/cart'),
               backgroundColor: AppTheme.successColor,
@@ -193,61 +209,5 @@ class _SalesPageState extends ConsumerState<SalesPage> {
             )
           : null,
     );
-  }
-
-  List<Map<String, dynamic>> _getFilteredProducts() {
-    List<Map<String, dynamic>> filtered = _products;
-
-    // Filtrer par catégorie
-    if (_selectedCategory != 'Tous') {
-      filtered = filtered.where((product) => 
-        product['category'] == _selectedCategory).toList();
-    }
-
-    // Filtrer par recherche
-    if (_searchController.text.isNotEmpty) {
-      final searchTerm = _searchController.text.toLowerCase();
-      filtered = filtered.where((product) =>
-        product['name'].toLowerCase().contains(searchTerm)).toList();
-    }
-
-    return filtered;
-  }
-
-  void _addToCart(Map<String, dynamic> product) {
-    setState(() {
-      // Vérifier si le produit est déjà dans le panier
-      final existingIndex = _cartItems.indexWhere(
-        (item) => item['id'] == product['id']
-      );
-
-      if (existingIndex >= 0) {
-        // Incrementer la quantité
-        _cartItems[existingIndex]['quantity'] += 1;
-      } else {
-        // Ajouter nouveau produit
-        _cartItems.add({
-          ...product,
-          'quantity': 1,
-        });
-      }
-    });
-
-    // Afficher un feedback
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${product['name']} ajouté au panier'),
-        duration: const Duration(seconds: 1),
-        backgroundColor: AppTheme.successColor,
-      ),
-    );
-  }
-
-  double _calculateTotal() {
-    double total = 0.0;
-    for (var item in _cartItems) {
-      total += (item['price'] as double) * (item['quantity'] as int);
-    }
-    return total;
   }
 }

@@ -36,19 +36,7 @@ CREATE INDEX idx_users_status ON users(status);
 CREATE INDEX idx_users_last_login ON users(last_login);
 CREATE INDEX idx_users_failed_logins ON users(failed_login_attempts, account_locked_until);
 
--- Create trigger for updated_at
-CREATE OR REPLACE FUNCTION update_users_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_users_updated_at
-    BEFORE UPDATE ON users
-    FOR EACH ROW
-    EXECUTE FUNCTION update_users_updated_at();
+-- Note: H2 doesn't support PL/pgSQL triggers, so we'll rely on JPA @EntityListeners for updated_at
 
 -- Insert default super admin user
 -- Password: admin123 (BCrypt hash)
@@ -56,8 +44,8 @@ INSERT INTO users (
     id, username, email, password_hash, first_name, last_name, 
     role, status, created_by
 ) VALUES (
-    gen_random_uuid(),
-    'admin',
+    RANDOM_UUID(),
+    'admin@pos.com',
     'admin@pos.com',
     '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDa',
     'Super',
@@ -73,8 +61,8 @@ INSERT INTO users (
     role, status, store_id, created_by
 ) VALUES 
 (
-    gen_random_uuid(),
-    'manager1',
+    RANDOM_UUID(),
+    'manager1@pos.com',
     'manager1@pos.com',
     '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDa',
     'Jean',
@@ -85,8 +73,8 @@ INSERT INTO users (
     'admin'
 ),
 (
-    gen_random_uuid(),
-    'cashier1',
+    RANDOM_UUID(),
+    'cashier1@pos.com',
     'cashier1@pos.com',
     '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDa',
     'Marie',
@@ -97,8 +85,8 @@ INSERT INTO users (
     'admin'
 ),
 (
-    gen_random_uuid(),
-    'stock1',
+    RANDOM_UUID(),
+    'stock1@pos.com',
     'stock1@pos.com',
     '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDa',
     'Pierre',

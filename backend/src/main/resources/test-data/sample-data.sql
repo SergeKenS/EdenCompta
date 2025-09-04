@@ -1,4 +1,5 @@
 -- Données de test pour le profil dev (H2)
+
 -- Créer un magasin de test
 INSERT INTO stores (id, name, address, phone, created_at, updated_at)
 VALUES ('550e8400-e29b-41d4-a716-446655440000', 'Magasin Test', '123 Rue Test', '0123456789', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

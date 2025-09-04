@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/constants/app_constants.dart';
@@ -67,7 +68,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                       icon: Icons.add_shopping_cart,
                       color: AppTheme.successColor,
                       onTap: () {
-                        // TODO: Navigate to sales
+                        context.go('/sales');
                       },
                     ),
                   ),
@@ -78,7 +79,17 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
                       icon: Icons.add_box,
                       color: AppTheme.accentColor,
                       onTap: () {
-                        // TODO: Navigate to add product
+                        context.go('/inventory');
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: QuickActionCard(
+                      title: 'Gérer Dépenses',
+                      icon: Icons.account_balance_wallet,
+                      color: AppTheme.warningColor,
+                      onTap: () {
+                        context.go('/expenses');
                       },
                     ),
                   ),

@@ -31,9 +31,9 @@ echo - Backend API : http://localhost:8080/api
 echo - Console H2 : http://localhost:8080/h2-console
 echo.
 echo Comptes de test :
-echo - Super Admin : admin@pos.com / admin123
-echo - Manager : manager1@pos.com / admin123
-echo - Caissier : cashier1@pos.com / admin123
+echo - Super Admin : admin / admin123
+echo - Manager : manager1 / admin123
+echo - Caissier : cashier1 / admin123
 echo.
 echo Les fenetres de terminal vont s'ouvrir automatiquement.
 echo Attendez que les services soient completement demarres.

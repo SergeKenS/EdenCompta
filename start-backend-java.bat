@@ -15,3 +15,4 @@ echo.
 java -cp "target/classes;target/dependency/*" -Dspring.profiles.active=dev com.votreentreprise.pos.PosApplication
 
 pause
+

@@ -59,3 +59,4 @@ echo Verification terminee
 echo ========================================
 
 pause
+

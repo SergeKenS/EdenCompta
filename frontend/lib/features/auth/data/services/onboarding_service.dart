@@ -111,3 +111,4 @@ class OnboardingResponse {
     this.user,
   });
 }
+

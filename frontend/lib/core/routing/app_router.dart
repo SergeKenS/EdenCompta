@@ -11,6 +11,9 @@ import '../../features/sales/presentation/pages/sales_page.dart';
 import '../../features/sales/presentation/pages/cart_page.dart';
 import '../../features/inventory/presentation/pages/inventory_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
+import '../../features/employees/presentation/screens/employee_list_screen.dart';
+import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../../features/expenses/presentation/pages/expenses_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return AppRouter().router;
@@ -69,18 +72,25 @@ class AppRouter {
               builder: (context, state) => const InventoryPage(),
             ),
             
+            // Expenses
+            GoRoute(
+              path: '/expenses',
+              name: 'expenses',
+              builder: (context, state) => const ExpensesPage(),
+            ),
+            
             // Employees (à implémenter)
             GoRoute(
               path: '/employees',
               name: 'employees',
-              builder: (context, state) => const Placeholder(),
+              builder: (context, state) => const EmployeeListScreen(),
             ),
             
             // Settings (à implémenter)
             GoRoute(
               path: '/settings',
               name: 'settings',
-              builder: (context, state) => const Placeholder(),
+              builder: (context, state) => const SettingsScreen(),
             ),
           ],
         ),

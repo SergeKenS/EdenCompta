@@ -5,8 +5,9 @@ import '../../../../core/network/dio_client.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../models/login_response_model.dart';
 import '../models/user_model.dart';
+import 'auth_service_interface.dart';
 
-class AuthService {
+class AuthService implements AuthServiceInterface {
   final DioClient _dioClient;
 
   AuthService(this._dioClient);

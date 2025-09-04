@@ -108,3 +108,4 @@ Le profil `dev` utilise :
 - ✅ Page de connexion accessible
 - ✅ Authentification avec les comptes de test
 - ✅ Redirection vers le dashboard après connexion
+

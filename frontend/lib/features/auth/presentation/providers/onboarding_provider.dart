@@ -78,3 +78,4 @@ final onboardingErrorProvider = Provider<String?>((ref) {
     error: (error, _) => error.toString(),
   );
 });
+

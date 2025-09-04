@@ -32,6 +32,7 @@ C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentre
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\cashflow\domain\CashMovement.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\inventory\domain\Product.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\expenses\web\ExpenseController.java
+C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\security\DevSecurityConfig.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\common\types\Quantity.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\inventory\web\ProductQueryController.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\sales\domain\CogsEntry.java
@@ -41,6 +42,7 @@ C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentre
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\attendance\repository\AttendanceRepository.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\rbac\repository\RoleRepository.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\cashflow\web\CashflowController.java
+C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\config\TestDataConfig.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\common\types\SessionStatus.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\expenses\domain\ExpenseStatus.java
 C:\Users\kenfa\Documents\Projets\EdenCompta\backend\src\main\java\com\votreentreprise\pos\receiving\service\ReceivingServiceImpl.java

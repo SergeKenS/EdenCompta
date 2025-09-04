@@ -18,3 +18,4 @@ echo L'application va s'ouvrir dans votre navigateur...
 flutter run -d web
 
 pause
+

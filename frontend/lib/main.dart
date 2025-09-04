@@ -12,6 +12,11 @@ void main() async {
   await Hive.openBox(AppConstants.authBox);
   await Hive.openBox(AppConstants.settingsBox);
   
+  // Nouvelles boîtes pour les modules employés et paramètres
+  await Hive.openBox('employee_box');
+  await Hive.openBox('settings_box');
+  await Hive.openBox('store_settings_box');
+  
   runApp(
     const ProviderScope(
       child: EdenComptaApp(),

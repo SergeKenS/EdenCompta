@@ -42,6 +42,7 @@ com\votreentreprise\pos\receiving\service\ReceivingServiceImpl.class
 com\votreentreprise\pos\attendance\repository\AttendanceRepository.class
 com\votreentreprise\pos\inventory\domain\InventoryTransaction.class
 com\votreentreprise\pos\sales\service\SalesService.class
+com\votreentreprise\pos\security\DevSecurityConfig.class
 com\votreentreprise\pos\sessions\web\OtherSessionController.class
 com\votreentreprise\pos\sessions\repository\SessionMovementRepository.class
 com\votreentreprise\pos\sessions\domain\SessionMovement.class
@@ -118,6 +119,7 @@ com\votreentreprise\pos\rbac\domain\Role.class
 com\votreentreprise\pos\users\web\AuthController$ChangePasswordRequest.class
 com\votreentreprise\pos\expenses\web\ExpenseController$RejectExpenseRequest.class
 com\votreentreprise\pos\sessions\domain\CashSession.class
+com\votreentreprise\pos\config\TestDataConfig.class
 com\votreentreprise\pos\expenses\web\ExpenseController.class
 com\votreentreprise\pos\rbac\repository\PermissionRepository.class
 com\votreentreprise\pos\reporting\service\ReportingService.class

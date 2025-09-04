@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../data/models/login_response_model.dart';
 import '../../data/models/user_model.dart';
-import '../../data/services/auth_service.dart';
+import '../../data/services/unified_auth_service.dart';
 
 // Provider pour le service d'authentification
-final authServiceProvider = Provider<AuthService>((ref) {
+final authServiceProvider = Provider<UnifiedAuthService>((ref) {
   final dioClient = ref.read(dioClientProvider);
-  return AuthService(dioClient);
+  return UnifiedAuthService(dioClient);
 });
 
 // Provider pour l'état de l'utilisateur connecté
@@ -25,7 +25,7 @@ final isLoggedInProvider = Provider<bool>((ref) {
 
 // Notifier pour gérer l'état d'authentification
 class AuthNotifier extends StateNotifier<AsyncValue<UserModel?>> {
-  final AuthService _authService;
+  final UnifiedAuthService _authService;
 
   AuthNotifier(this._authService) : super(const AsyncValue.data(null)) {
     _loadCurrentUser();

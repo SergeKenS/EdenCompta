@@ -192,3 +192,4 @@ Votre application EdenCompta POS est maintenant fonctionnelle !
 - **Backend API :** `http://localhost:8080/api`
 - **API Docs :** `http://localhost:8080/swagger-ui/index.html`
 - **Database :** `localhost:5432/pos_db`
+
